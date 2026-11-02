@@ -14,3 +14,5 @@ progress::-webkit-progress-value{background:var(--accent)}progress::-moz-progres
 input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px #88133726}
 
 .brand{font-size:19px;letter-spacing:.4px}.brand span{color:var(--accent)}
+
+.reference-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.reference-heading h2{margin:0}.reference-heading button{color:var(--accent);font-size:12px}
