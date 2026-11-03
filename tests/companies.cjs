@@ -11,6 +11,7 @@ run(async({browser,url,check})=>{
  await p.locator('#start').click();
  assert.ok((await p.locator('#reference-answer').textContent()).length>25);
  await p.locator('#next').click();
+ await p.locator('#exit').click();
  assert.equal(await p.locator('#done').textContent(),'1');
  await p.locator('#company-select').selectOption('snapcompany');
  await p.waitForURL('**/?company=snapcompany');
