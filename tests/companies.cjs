@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const {run}=require('./helpers.cjs');
+run(async({browser,url,check})=>{
+ const p=await browser.newPage();await p.goto(url);
+ assert.equal(await p.locator('#company-select option').count(),2);
+ assert.equal(await p.locator('#total').textContent(),'66');
+ await p.locator('#company-select').selectOption('nudge');
+ await p.waitForURL('**/?company=nudge');
+ assert.equal(await p.locator('#total').textContent(),'64');
+ assert.equal(await p.locator('#company-name').textContent(),'넛지헬스케어');
+ await p.locator('#start').click();
+ assert.ok((await p.locator('#reference-answer').textContent()).length>25);
+ await p.locator('#next').click();
+ assert.equal(await p.locator('#done').textContent(),'1');
+ await p.locator('#company-select').selectOption('snapcompany');
+ await p.waitForURL('**/?company=snapcompany');
+ assert.equal(await p.locator('#total').textContent(),'66');
+ assert.equal(await p.locator('#done').textContent(),'0');
+ await p.locator('#company-select').selectOption('nudge');
+ await p.waitForURL('**/?company=nudge');
+ assert.equal(await p.locator('#done').textContent(),'1');
+ await p.locator('#list-button').click();
+ assert.equal(await p.locator('#questions-list details').count(),64);
+ check('회사별 66/64문항 선택 및 읽음 기록 분리');
+});
