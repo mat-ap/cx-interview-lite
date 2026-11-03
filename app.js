@@ -1,6 +1,6 @@
 (() => {
 'use strict';
-const $=id=>document.getElementById(id),pack=window.CX_COMPANY_PACKS?.[0],questions=pack?.questions||[],KEY='cx-interview-lite:snapcompany:v1';
+const $=id=>document.getElementById(id),packs=window.CX_COMPANY_PACKS||[],selected=new URLSearchParams(location.search).get('company'),pack=packs.find(p=>p.id===selected)||packs[0],questions=(pack?.questions||[]).map(q=>({...q,followUps:q.followUps.map(f=>({...f}))})),KEY=`cx-interview-lite:${pack?.id||'snapcompany'}:v1`;
 let state={records:{}},broken=false,queue=[],index=0,follow=-1,view='home',returnView='home',completed=new Set();
 function error(message){$('error').textContent=message;$('error').hidden=false;}
 try{const raw=localStorage.getItem(KEY);if(raw){state=JSON.parse(raw);if(!state||!state.records||typeof state.records!=='object'||Array.isArray(state.records)||Object.values(state.records).some(r=>!r||typeof r!=='object'||(r.answers!==undefined&&(!r.answers||typeof r.answers!=='object'||Object.values(r.answers).some(a=>typeof a!=='string')))))throw Error();}}catch{broken=true;state={records:{}};error('기존 저장 자료를 읽지 못해 저장을 중지했어요. 브라우저 저장 설정을 확인해 주세요. 질문과 답변은 계속 읽을 수 있어요.');}
@@ -34,5 +34,7 @@ const id=editing?.id||'custom-'+crypto.randomUUID();const q={...(editing||{id,ca
 const before=state.customQuestions;state.customQuestions=[...(before||[]).filter(x=>x.id!==id),q];if(!save()){if(before===undefined)delete state.customQuestions;else state.customQuestions=before;$('edit-status').textContent='저장하지 못했어요. 입력 내용은 유지됩니다. 저장 공간을 확인하고 다시 시도해 주세요.';return;}
 const i=questions.findIndex(x=>x.id===id);if(i<0)questions.push(q);else questions[i]=q;queue=queue.map(x=>x.id===id?q:x);if(current()?.id===id){if(follow>=q.followUps.length)follow=-1;render();}stats();$('start').disabled=false;$('empty').hidden=true;$('search').value='';list();const row=[...$('questions-list').children].find(el=>el.dataset.id===id);if(row)row.open=true;dirty=false;$('editor').close();};
 $('refresh-site').onclick=()=>{if($('editor').open&&dirty&&!confirm('저장하지 않은 수정 내용은 사라집니다. 새로고침할까요?'))return;const url=new URL(location.href);url.searchParams.set('_refresh',String(Date.now()));url.hash='';location.replace(url.href);};
+for(const company of packs){const option=document.createElement('option');option.value=company.id;option.textContent=company.name;$('company-select').append(option);}$('company-select').value=pack?.id||'';$('company-select').onchange=()=>{const url=new URL(location.href);url.searchParams.set('company',$('company-select').value);url.searchParams.delete('_refresh');location.assign(url.href);};
+$('company-name').textContent=pack?.name||'';$('company-role').textContent=pack?.role||'';$('company-icon').textContent=pack?.name?.slice(0,1)||'?';$('practice-company').textContent=`${pack?.name||''} · ${pack?.role||''}`;$('catalog-company').textContent=pack?.name||'';document.title=`Interview Notes · ${pack?.name||''}`;
 $('company-notes').textContent=pack?.memo||'';stats();$('start').disabled=!questions.length;if(!questions.length){$('empty').hidden=false;$('empty').textContent='질문 자료가 없어요. questions.js 파일을 확인해 주세요.';}
 })();
