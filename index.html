@@ -4,7 +4,7 @@
  const fresh=/^\d{10,17}$/.test(stamp||'')?stamp:'';
  const asset=path=>{const url=new URL(path,document.baseURI);if(fresh)url.searchParams.set('_refresh',fresh);return url.href;};
  if(fresh)document.getElementById('app-styles').href=asset('./styles.css');
- document.addEventListener('DOMContentLoaded',()=>{for(const path of ['./questions.js','./nudge-questions.js','./app.js?v=refresh-20261103']){const script=document.createElement('script');script.async=false;script.src=asset(path);document.head.append(script);}});
+ document.addEventListener('DOMContentLoaded',()=>{for(const path of ['./questions.js','./nudge-questions.js','./pulse-questions.js','./app.js?v=refresh-20261103']){const script=document.createElement('script');script.async=false;script.src=asset(path);document.head.append(script);}});
 })();
 </script></head><body>
 <header><a href="./" class="brand">INTERVIEW <span>NOTES</span><small>CX INTERVIEW LITE</small></a><div class="header-actions"><button id="list-button" class="quiet">전체 질문 <span>↗</span></button><button id="refresh-site" class="quiet refresh-button" type="button" aria-label="최신 내용으로 새로고침" title="최신 내용으로 새로고침"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.7M20 4v7h-7"/></svg></button></div></header>
